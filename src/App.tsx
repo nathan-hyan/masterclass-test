@@ -45,7 +45,7 @@ function App() {
           )}
         </ul>
 <div className='flex justify-center mt-12 pb-12'>
-  <button
+ {!onlyFavorite && <button
     className='px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-yellow-500 text-slate-900 hover:bg-yellow-400 active:bg-yellow-600 disabled:hover:bg-yellow-500'
     onClick={() => fetchNextPage()}
     disabled={!hasNextPage || isFetchingNextPage}
@@ -55,7 +55,7 @@ function App() {
       : hasNextPage
         ? 'Load More'
         : 'Nothing more to load'}
-  </button>
+  </button>}
 </div></>
       )}
     </div>
