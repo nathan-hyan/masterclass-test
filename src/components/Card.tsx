@@ -11,7 +11,7 @@ const handleClick = () => {
   return (
     <li key={course.id} title='Click to favorite'>
     
-    <button onClick={() => handleClick()} className={classNames('flex flex-row gap-3 rounded-lg bg-slate-700 border-2 p-2 cursor-pointer  transition-colors', {
+    <button aria-label='Click to favorite' onClick={() => handleClick()} className={classNames('flex flex-row gap-3 rounded-lg bg-slate-700 border-2 p-2 cursor-pointer  transition-colors', {
       'border-slate-600 hover:border-slate-400': !course.favorite && !isPending ,
       'border-yellow-300 hover:border-yellow-100': course.favorite && !isPending,
       'border-gray-400': isPending
