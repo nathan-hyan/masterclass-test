@@ -1,52 +1,30 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Course } from './constants';
 import Card from './components/Card';
+import useCourses from './hooks/useCourses';
 
-const getCourses = async (): Promise<Course[]> => {
-  return fetch(`${import.meta.env.VITE_API_URL}/courses?email=${import.meta.env.VITE_EMAIL}`, {
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "",
-    }
-  }).then(res => res.json());
-}
+import Spinner from './assets/spinner.svg'
+import useFavorite from './hooks/useFavorite';
 
-const favClass = async () => {
-  return fetch(import.meta.env.VITE_API_URL + '/classes/favorite', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      classId: 1
-    }),
-  }).then(res => res.json());
-}
 
 function App() {
-  const queryClient = useQueryClient();
+ 
+  const {data, isLoading} = useCourses();
+  const {mutate, isPending} = useFavorite();
 
-  const query = useQuery<Course[]>({queryKey: ['courses'], queryFn: getCourses})
-
-// Mutations
-
-const mutation = useMutation({
-  mutationFn: favClass,
-  onSuccess: () => {
-    // Invalidate and refetch
-    queryClient.invalidateQueries({ queryKey: ['courses'] })
-  },
-})
   return (
-    <div className='min-screen-full bg-slate-800 text-white'>
+    <div className='screen-full min-h-screen bg-slate-800 text-white'>
       <h1 className='py-3 text-2xl font-bold text-center'>Classes</h1>
-      <ul className='container mx-auto w-xl flex flex-col gap-3'>
-        {query.data?.map((course) => (
-          <>
-          <Card course={course} />
-          </>
-        ))}
-      </ul>
+      {isLoading ? (
+        <div className='flex flex-row gap-3 items-center justify-center'>
+        <img src={Spinner} alt="Loading"/>
+        <div className='text-center text-2xl'>Loading, please wait...</div>
+        </div>
+      ) : (
+        <ul className='container mx-auto w-xl flex flex-col gap-3'>
+          {data?.map((course) => (
+            <Card course={course} onClick={(course) => mutate(course)} isPending={isPending} />
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
